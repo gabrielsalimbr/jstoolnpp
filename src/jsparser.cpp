@@ -19,7 +19,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 #include "jsparser.h"
-#include <cstring>
 
 using namespace std;
 
@@ -30,8 +29,6 @@ JSParser::JSParser()
 
 void JSParser::Init()
 {
-	m_debug = false;
-
 	m_lineCount = 1; // 行号从 1 开始
 	m_tokenCount = 0;
 
@@ -41,20 +38,6 @@ void JSParser::Init()
 	m_bPosNeg = false;
 
 	m_bGetTokenInit = false;
-}
-
-void JSParser::PrintDebug()
-{
-	if(m_debug)
-	{
-		char buf[500] = {0};
-		sprintf(m_debugOutput, "Processed tokens: %ld\n", m_tokenCount);
-		sprintf(buf, "Time used: %.3fs\n", m_duration);
-		strcat(m_debugOutput, buf);
-		sprintf(buf, "%.3f tokens/second\n", m_tokenCount / m_duration);
-		strcat(m_debugOutput, buf);
-		printf("%s", m_debugOutput);
-	}
 }
 
 bool JSParser::IsNormalChar(int ch)
@@ -174,8 +157,7 @@ void JSParser::GetTokenRaw()
 				m_charB = GetChar();
 			}
 
-			if(m_charA == '/' && 
-				(m_charB != '*' && m_charB != '|')) // 正则可能结束
+			if(m_charA == '/') // 正则可能结束
 			{
 				if(!bRegularFlags && IsNormalChar(m_charB))
 				{
@@ -428,10 +410,7 @@ void JSParser::PreparePosNeg()
 	 * 那么 m_tokenB 实际上是一个正负数
 	 */
 	if(m_tokenB.type == OPER_TYPE && (m_tokenB.code == "-" || m_tokenB.code == "+") &&
-		(m_tokenA.type != STRING_TYPE || 
-		m_tokenA.code == "return" || m_tokenA.code == "case" ||
-		m_tokenA.code == "delete" || m_tokenA.code == "throw") && 
-		m_tokenA.type != REGULAR_TYPE &&
+		(m_tokenA.type != STRING_TYPE || m_tokenA.code == "return") && m_tokenA.type != REGULAR_TYPE &&
 		m_tokenA.code != "++" && m_tokenA.code != "--" &&
 		m_tokenA.code != "]" && m_tokenA.code != ")" &&
 		IsNormalChar(m_charB))

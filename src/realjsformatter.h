@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 #ifndef _REAL_JSFORMATTER_H_
 #define _REAL_JSFORMATTER_H_
+#include <ctime>
 #include <string>
 #include <map>
 #include <set>
@@ -106,6 +107,8 @@ public:
 	static string TrimRightSpace(const string& str);
 	void StringReplace(string& strBase, const string& strSrc, const string& strDes);
 
+	bool m_debugOutput;
+
 private:
 	void Init();
 
@@ -120,6 +123,10 @@ private:
 		const string& rightStyle = string("")); // Put a token out with style
 	void PutString(const string& str);
 	void PutLineBuffer();
+
+	clock_t m_startClock;
+	clock_t m_endClock;
+	double m_duration;
 
 	int m_nLineIndents;
 	string m_lineBuffer;

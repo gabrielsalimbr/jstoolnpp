@@ -99,10 +99,6 @@ public:
 	virtual ~JSParser()
 	{}
 
-	bool m_debug;
-	inline const char *GetDebugOutput()
-	{ return m_debugOutput; }
-
 protected:
 	int m_charA;
 	int m_charB;
@@ -119,16 +115,6 @@ protected:
 
 	bool GetToken(); // 处理过负数, 正则等等的 GetToken 函数
 
-	void inline StartParse()
-	{ m_startClock = clock(); }
-
-	void inline EndParse()
-	{
-		m_endClock = clock();
-		m_duration = (double)(m_endClock - m_startClock) / CLOCKS_PER_SEC;
-		PrintDebug();
-	}
-
 private:
 	void Init();
 
@@ -143,8 +129,6 @@ private:
 	void PreparePosNeg(); // 通过词法判断 tokenB 正负数
 	void PrepareTokenB();
 
-	void PrintDebug();
-
 	string m_strBeforeReg; // 判断正则时，正则前面可以出现的字符
 
 	bool m_bRegular; // tokenB 实际是正则 GetToken 用到的两个成员状态
@@ -152,11 +136,6 @@ private:
 	TokenQueue m_tokenBQueue;
 
 	bool m_bGetTokenInit; // 是否是第一次执行 GetToken
-
-	clock_t m_startClock;
-	clock_t m_endClock;
-	double m_duration;
-	char m_debugOutput[1024];
 
 private:
 	// 阻止拷贝
