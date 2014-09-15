@@ -107,8 +107,6 @@ void RealJSFormatter::Init()
 	m_specKeywordSet.insert("function");
 	m_specKeywordSet.insert("with");
 	m_specKeywordSet.insert("return");
-	m_specKeywordSet.insert("throw");
-	m_specKeywordSet.insert("delete");
 }
 
 void RealJSFormatter::PutToken(const string& token,
@@ -489,7 +487,6 @@ void RealJSFormatter::ProcessOper(bool bHaveNewLine, char tokenAFirst, char toke
 		{
 			m_blockStack.push(JS_FUNCTION); // 压回 JS_FUNCTION
 		}
-		// 修正({...}) 中多一次缩进 end
 
 		m_blockStack.push(m_blockMap[m_tokenA.code]); // 入栈，增加缩进
 		++m_nIndents;
@@ -618,10 +615,8 @@ void RealJSFormatter::ProcessOper(bool bHaveNewLine, char tokenAFirst, char toke
 
 		//char tmpTopStack;
 		//GetStackTop(m_blockStack, tmpTopStack);
-		// 修正({...}) 中多一次缩进
 		if(topStack != JS_ASSIGN && StackTopEq(m_blockStack, JS_BRACKET))
 			++m_nIndents;
-		// 修正({...}) 中多一次缩进 end
 
 		PopMultiBlock(topStack);
 
